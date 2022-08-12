@@ -15,10 +15,24 @@ export class UserDto {
     email: string | null = null;
 
     @ApiProperty({ type: 'string', required: true, default: null })
-    @IsDate()
+    @IsString()
     dateOfBirth: string | null = null;
 
     @ApiProperty({ type: 'string', required: true, default: "Male" })
     @IsDate()
     gender: string | null = 'Male';
+
+    @ApiProperty({ type: 'string', required: true, default: null })
+    @IsString()
+    password: string | null = null;
+}
+
+export class LoginDto {
+    @ApiProperty({ type: 'string', required: true, default: null })
+    @IsEmail()
+    email: string | null = null;
+
+    @ApiProperty({ type: 'string', required: true, default: null })
+    @IsString()
+    password: string | null = null;
 }
