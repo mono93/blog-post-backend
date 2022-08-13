@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { firebaseConfig } from 'src/config';
 
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification  } from "firebase/auth";
 
 @Injectable()
 export class FirebaseService {
@@ -23,10 +23,11 @@ export class FirebaseService {
         try {
             this.logger.debug(`Executing firebase regsiter method with ${email} and ${password}`);
             const res = await createUserWithEmailAndPassword(this.auth, email, password);
+            await sendEmailVerification(res.user);
             return res.user;
         } catch (err) {
-            console.error(err);
-            alert(err.message);
+            this.logger.error(`Error occured ${err}`);
+            throw new Error("User Already Exist");
         }
     };
 

@@ -1,27 +1,29 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto, UserDto } from './dto/users.dto';
+import { Response } from 'express';
+import { UserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
+import { ReponseService } from '../../services/reponse/reponse.service';
 
 @Controller()
 @ApiTags("Users")
 export class UsersController {
     constructor(
-        private userService: UsersService
+        private userService: UsersService,
+        private apiReponse: ReponseService
     ) { }
 
     @Post('signup')
     async signup(
-        @Query() userDto: UserDto
+        @Body() userDto: UserDto,
+        @Res() res: Response
     ): Promise<any> {
-        return this.userService.signUp(userDto);
+        try {
+            await this.userService.signUp(userDto);
+            return this.apiReponse.success(res, HttpStatus.OK, `User Signup Succesful, an verfication mail will be sent to ${userDto.email}`)
+        } catch (err) {
+            return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
+        }
     }
 
-
-    @Post('login')
-    async login(
-        @Query() loginDto: LoginDto
-    ): Promise<any> {
-        return null;
-    }
 }
