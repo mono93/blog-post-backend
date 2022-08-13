@@ -14,7 +14,6 @@ export class UsersService {
 
     signUp = async (_userDto: UserDto) => {
         try {
-            console.log(_userDto)
             await this.firebase.registerWithEmailAndPassword(_userDto.email, _userDto.password);
 
             let payload = {

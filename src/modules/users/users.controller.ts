@@ -10,7 +10,7 @@ import { ReponseService } from '../../services/reponse/reponse.service';
 export class UsersController {
     constructor(
         private userService: UsersService,
-        private apiReponse: ReponseService
+        private apiReponse: ReponseService,
     ) { }
 
     @Post('signup')
@@ -19,7 +19,11 @@ export class UsersController {
         @Res() res: Response
     ): Promise<any> {
         try {
-            await this.userService.signUp(userDto);
+            let payload = {
+                ...userDto,
+                password: Buffer.from(userDto.password, 'base64').toString()
+            }
+            await this.userService.signUp(payload);
             return this.apiReponse.success(res, HttpStatus.OK, `User Signup Succesful, an verfication mail will be sent to ${userDto.email}`)
         } catch (err) {
             return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
