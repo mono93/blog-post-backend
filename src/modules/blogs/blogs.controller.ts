@@ -1,10 +1,12 @@
 import { Controller, Get, HttpStatus, Query, Res} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ReponseService } from 'src/services';
 import { BlogsService } from './blogs.service';
 import { GetBlogDetailsDto } from './dto/blogs.dto';
 
-@Controller('blogs')
+@Controller()
+@ApiTags('Blogs')
 export class BlogsController {
     constructor(
         private blogService: BlogsService,
