@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserDto } from './dto/users.dto';
-import { DbService } from '../../services/db/db.service';
-import { FirebaseService } from '../../services/firebase/firebase.service';
+import { UserDto, VerifyEmailDto } from './dto/users.dto';
+import { DbService, FirebaseService } from '../../services';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -26,7 +25,15 @@ export class UsersService {
                 signup_provider: 'email'
             }
 
-            return await this.connection.executeQuery('SELECT public.fn_signup($1)', [JSON.stringify(payload)]);
+            return await this.connection.executeQuery('fn_signup', [JSON.stringify(payload)]);
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    emailVerify = async (_verifyEmailDto: VerifyEmailDto) => {
+        try {
+            return await this.connection.executeQuery('fn_email_verification', [JSON.stringify(_verifyEmailDto)]);
         } catch (err) {
             throw new Error(err);
         }

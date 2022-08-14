@@ -9,14 +9,14 @@ export class DbService {
         @Inject('DATABASE_POOL') private pool: any
     ) { }
 
-    async executeQuery(queryText: string, values: any[] = []) {
+    async executeQuery(functionName: string, values: any[] = []) {
         try {
-            this.logger.debug(`Executing query: ${queryText} (${values})`);
-            let result = await this.pool.query(queryText, values);
-            this.logger.debug(`Executed query, result ${JSON.stringify(result.rows[0].fn_signup)}`);
-            let msgId = result.rows[0].fn_signup.msg_id
+            this.logger.debug(`Executing query: SELECT public.${functionName} ($1) (${values})`);
+            let result = await this.pool.query(`SELECT public.${functionName} ($1)`, values);
+            this.logger.debug(`Executed query, result ${JSON.stringify(result.rows[0][functionName])}`);
+            let msgId = result.rows[0][functionName].msg_id
             if (msgId === 1) {
-                return result.rows[0].fn_signup;
+                return result.rows[0][functionName];
             } else {
                 throw new Error("Error at db level");
             }

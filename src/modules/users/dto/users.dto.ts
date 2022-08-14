@@ -27,12 +27,8 @@ export class UserDto {
     password: string | null = null;
 }
 
-export class LoginDto {
+export class VerifyEmailDto {
     @ApiProperty({ type: 'string', required: true, default: null })
     @IsEmail()
     email: string | null = null;
-
-    @ApiProperty({ type: 'string', required: true, default: null })
-    @IsString()
-    password: string | null = null;
 }
