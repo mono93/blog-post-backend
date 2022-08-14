@@ -38,4 +38,15 @@ export class UsersService {
             throw new Error(err);
         }
     }
+
+    getUserDetails = async (_getUserEmailDto: VerifyEmailDto) => {
+        try {
+            let payload = {
+                user_email: _getUserEmailDto.email,
+            }
+            return await this.connection.executeQuery('fn_get_user_details', [JSON.stringify(payload)]);
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
 }

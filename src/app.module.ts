@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './modules/users/users.module';
 import { AppRoutingModule } from './routes/routes';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule, BlogsModule } from './modules';
 import { DbModule, FirebaseModule, ReponseModule } from './services';
 
 @Module({
@@ -13,6 +13,7 @@ import { DbModule, FirebaseModule, ReponseModule } from './services';
     FirebaseModule,
     ReponseModule,
     UsersModule,
+    BlogsModule,
     AppRoutingModule
   ],
   controllers: [AppController],

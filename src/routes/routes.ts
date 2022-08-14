@@ -1,11 +1,15 @@
 import { Module } from "@nestjs/common";
 import { RouterModule } from "@nestjs/core";
-import { UsersModule } from "src/modules/users/users.module";
+import { UsersModule, BlogsModule } from "../modules";
 
 const routes = [
     {
         path: '/user',
         module: UsersModule
+    },
+    {
+        path: '/blogs',
+        module: BlogsModule
     }
 ]
 

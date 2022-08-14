@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserDto, VerifyEmailDto } from './dto/users.dto';
@@ -38,6 +38,19 @@ export class UsersController {
         try {
             await this.userService.emailVerify(_verifyEmailDto);
             return this.apiReponse.success(res, HttpStatus.OK, `Email verification done`)
+        } catch (err) {
+            return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
+        }
+    }
+
+    @Get('get-user')
+    async getUser(
+        @Query() _getUserEmailDto: VerifyEmailDto,
+        @Res() res: Response
+    ): Promise<any> {
+        try {
+            const response = await this.userService.getUserDetails(_getUserEmailDto);
+            return this.apiReponse.success(res, HttpStatus.OK, response.msg, response.data)
         } catch (err) {
             return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
         }
