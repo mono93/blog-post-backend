@@ -10,7 +10,7 @@ import { ReponseService } from '../../services';
 export class UsersController {
     constructor(
         private userService: UsersService,
-        private apiReponse: ReponseService,
+        private apiReponse: ReponseService
     ) { }
 
     @Post('signup')
@@ -19,11 +19,7 @@ export class UsersController {
         @Res() res: Response
     ): Promise<any> {
         try {
-            let payload = {
-                ...userDto,
-                password: Buffer.from(userDto.password, 'base64').toString()
-            }
-            await this.userService.signUp(payload);
+            await this.userService.signUp(userDto);
             return this.apiReponse.success(res, HttpStatus.CREATED, `User Signup Succesful, an verfication mail will be sent to ${userDto.email}`)
         } catch (err) {
             return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
@@ -53,6 +49,19 @@ export class UsersController {
             return this.apiReponse.success(res, HttpStatus.OK, response.msg, response.data)
         } catch (err) {
             return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, err.message)
+        }
+    }
+
+    @Get('is-user-available')
+    async isUserAvailable(
+        @Query() _getUserEmailDto: VerifyEmailDto,
+        @Res() res: Response
+    ): Promise<any> {
+        try {
+            const response = await this.userService.isUserAvailable(_getUserEmailDto);
+            return this.apiReponse.success(res, HttpStatus.OK, response.msg, response.data)
+        } catch (err) {
+            return this.apiReponse.success(res, HttpStatus.INTERNAL_SERVER_ERROR, 'User not Available')
         }
     }
 
