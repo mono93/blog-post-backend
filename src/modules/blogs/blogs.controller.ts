@@ -1,5 +1,5 @@
 import { Controller, Get, HttpStatus, Query, Res} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ReponseService } from 'src/services';
 import { BlogsService } from './blogs.service';
@@ -14,6 +14,7 @@ export class BlogsController {
     ) { }
 
     @Get('get-blog-details')
+    @ApiBearerAuth()
     async getUser(
         @Query() _getBlogDetailDto: GetBlogDetailsDto,
         @Res() res: Response

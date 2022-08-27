@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppRoutingModule } from './routes/routes';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule, BlogsModule } from './modules';
+import { UsersModule, BlogsModule, ProfileModule } from './modules';
 import { DbModule, ReponseModule } from './services';
+import { PreauthMiddleware } from './middleware/preauth.middleware';
 
 @Module({
   imports: [
@@ -13,9 +14,23 @@ import { DbModule, ReponseModule } from './services';
     ReponseModule,
     UsersModule,
     BlogsModule,
+    ProfileModule,
     AppRoutingModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(PreauthMiddleware)
+      .forRoutes(
+        {
+          path: 'profile', method: RequestMethod.ALL
+        },
+        {
+          path: 'blogs', method: RequestMethod.ALL
+        }
+      );
+  }
+}
