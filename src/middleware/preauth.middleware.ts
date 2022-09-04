@@ -41,6 +41,7 @@ export class PreauthMiddleware implements NestMiddleware {
                     const user = {
                         email: decodedToken.email
                     }
+                    this.logger.debug(`User Email --> ${JSON.stringify(user)}`);
                     req['user'] = user;
                     next();
                 }).catch(error => {
