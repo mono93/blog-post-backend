@@ -21,7 +21,7 @@ export class DbService {
                 return result.rows[0][functionName];
             }
         } catch (err) {
-            this.logger.error(`error ${err}`);
+            this.logger.error(`Error ${err}`);
             throw new Error(err);
         }
     }
