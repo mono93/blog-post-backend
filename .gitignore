@@ -33,7 +33,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-package-lock.json
+#package-lock.json
 
 .env
 blog-post-authentication-firebase-adminsdk-c1uqa-1cfca32aa6.json
