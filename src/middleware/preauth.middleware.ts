@@ -1,21 +1,9 @@
 import { HttpStatus, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import * as firebase from 'firebase-admin';
 import { ReponseService } from 'src/services';
-import * as serviceAccount from '../config/blog-post-authentication-firebase-adminsdk-c1uqa-1cfca32aa6.json';
 
-const firebaseParams = {
-    type: serviceAccount.type,
-    projectId: serviceAccount.project_id,
-    privateKeyId: serviceAccount.private_key_id,
-    privateKey: serviceAccount.private_key,
-    clientEmail: serviceAccount.client_email,
-    clientId: serviceAccount.client_id,
-    authUri: serviceAccount.auth_uri,
-    tokenUri: serviceAccount.token_uri,
-    authProviderX509CertUrl: serviceAccount.auth_provider_x509_cert_url,
-    clientC509CertUrl: serviceAccount.client_x509_cert_url
-}
 
 @Injectable()
 export class PreauthMiddleware implements NestMiddleware {
@@ -26,10 +14,21 @@ export class PreauthMiddleware implements NestMiddleware {
 
     constructor(
         private apiReponse: ReponseService,
+        private configService: ConfigService,
     ) {
-        this.defaultApp = firebase.initializeApp({
-            credential: firebase.credential.cert(firebaseParams),
-        });
+        const firebaseParams = {
+            type: this.configService.get('FIREBASE_TYPE'),
+            projectId: this.configService.get('FIREBASE_PROJECT_ID'),
+            privateKeyId: this.configService.get('FIREBASE_PRIVATE_KEY_ID'),
+            privateKey: this.configService.get('FIREBASE_PRIVATE_KEY'),
+            clientEmail: this.configService.get('FIREBASE_CLIENT_EMAIL'),
+            clientId: this.configService.get('FIREBASE_CLIENT_ID'),
+            authUri: this.configService.get('FIREBASE_AUTH_URI'),
+            tokenUri: this.configService.get('FIREBASE_TOKEN_URI'),
+            authProviderX509CertUrl: this.configService.get('FIREBASE_AUTH_PROVIDER_x509_CERT_URL'),
+            clientC509CertUrl: this.configService.get('FIREBASE_CLIENT_x509_CERT_URL')
+        }
+        this.defaultApp = firebase.initializeApp({ credential: firebase.credential.cert(firebaseParams) });
     }
 
     use(req: Request, res: Response, next: Function) {
