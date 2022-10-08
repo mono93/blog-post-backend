@@ -9,7 +9,10 @@ const databasePoolFactory = async (configService: ConfigService) => {
         host: configService.get('POSTGRES_HOST'),
         database: configService.get('POSTGRES_DB'),
         password: configService.get('POSTGRES_PASSWORD'),
-        port: 5432,
+        port: configService.get('POSTGRES_LOCAL_PORT'),
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
 };
 
